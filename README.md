@@ -29,21 +29,54 @@ HMNToolSuite is a research-oriented simulation and emulation platform designed f
 
 ## Requirements
 
-- **Java Runtime Environment (JRE) / JDK**: Version 8 or higher.
+- **Java JDK**: Version 8 or higher (Java 21 recommended).
 - **Display**: GUI components require a graphical environment (Swing-based).
+
+### Installing Java
+
+**macOS** – Install via [SDKMAN](https://sdkman.io/):
+```bash
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk install java 21.0.6-tem
+```
+
+**Windows** – Download and install the JDK from [Adoptium](https://adoptium.net/).
+
+## Build from Source
+
+A `build.sh` script is provided for macOS/Linux to recompile all source files:
+
+```bash
+./build.sh
+```
+
+This compiles all `.java` files in `src/` into the `bin/` directory.
 
 ## How to Run
 
-### 1. Emulator GUI
-Launches the main interactive emulation interface.
+### macOS / Linux
+
+**Emulator GUI** (equivalent of `Run.bat`):
 ```bash
-./Run.bat
+./run.sh
 ```
 
-### 2. CLI Simulator
-Runs the network simulator in command-line mode.
+**CLI Simulator** (equivalent of `RunSimulator.bat`):
 ```bash
-./RunSimulator.bat
+./run_simulator.sh
+```
+
+### Windows
+
+**Emulator GUI**:
+```bat
+Run.bat
+```
+
+**CLI Simulator**:
+```bat
+RunSimulator.bat
 ```
 
 ## Credits
