@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<emulator>
+<mobilenode>
+	<name>BIKE</name>
+	<icon>bike.png</icon>
+	<color>036105</color>
+	<maxVelocity>20</maxVelocity>
+	<minVelocity>0</minVelocity>
+</mobilenode>
+</emulator>

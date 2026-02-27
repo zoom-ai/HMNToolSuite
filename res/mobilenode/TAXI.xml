@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<emulator>
+<mobilenode>
+	<name>TAXI</name>
+	<icon>taxi.png</icon>
+	<color>00FFFF</color>
+	<maxVelocity>80</maxVelocity>
+	<minVelocity>0</minVelocity>
+</mobilenode>
+</emulator>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<emulator>
+<network>
+<name>5G</name>
+<device>RadioAccessStation</device>
+<coverage>1</coverage>
+<bandwidth>1</bandwidth>
+<delay>1</delay>
+<jitter>1</jitter>
+<bitErrorRate>1.0</bitErrorRate>
+<throughput>1.0</throughput>
+<burstErr>1.0</burstErr>
+<packetLossRatio>1.0</packetLossRatio>
+<costRate>1.0</costRate>
+<txPower>1.0</txPower>
+<rxPower>1.0</rxPower>
+<idlePower>1.0</idlePower>
+<minVelocity>1</minVelocity>
+<maxVelocity>1</maxVelocity>
+<color>cc0000</color>
+</network>
+</emulator>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<emulator>
+<mobilenode>
+	<name>WALK</name>
+	<icon>walk.png</icon>
+	<color>FFAFAF</color>
+	<maxVelocity>4</maxVelocity>
+	<minVelocity>0</minVelocity>
+</mobilenode>
+</emulator>

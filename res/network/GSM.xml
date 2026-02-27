@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<emulator>
+<network>
+<name>GSM</name>
+<device>BaseStation</device>
+<coverage>1200</coverage>
+<bandwidth>100</bandwidth>
+<delay>10</delay>
+<jitter>10</jitter>
+<bitErrorRate>0.1</bitErrorRate>
+<throughput>0.4</throughput>
+<burstErr>0.44</burstErr>
+<packetLossRatio>0.11</packetLossRatio>
+<costRate>0.95</costRate>
+<txPower>0.11</txPower>
+<rxPower>0.5</rxPower>
+<idlePower>0.1</idlePower>
+<minVelocity>0</minVelocity>
+<maxVelocity>120</maxVelocity>
+<color>33ccff</color>
+</network>
+</emulator>

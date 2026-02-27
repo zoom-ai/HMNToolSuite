@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<emulator>
+<network>
+<name>BlueTooth</name>
+<device>AccessPoint</device>
+<coverage>300</coverage>
+<bandwidth>50</bandwidth>
+<delay>1</delay>
+<jitter>2</jitter>
+<bitErrorRate>0.7</bitErrorRate>
+<throughput>0.12</throughput>
+<burstErr>0.11</burstErr>
+<packetLossRatio>0.13</packetLossRatio>
+<costRate>0.1</costRate>
+<txPower>0.111</txPower>
+<rxPower>0.222</rxPower>
+<idlePower>0.333</idlePower>
+<minVelocity>0</minVelocity>
+<maxVelocity>5</maxVelocity>
+<color>33ffcc</color>
+</network>
+</emulator>

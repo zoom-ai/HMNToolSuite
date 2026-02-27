@@ -1,0 +1,174 @@
+// Block definition (there may be more than one block per file)
+// This is for calculating APAV for Quality of Voice Call
+FUNCTION_BLOCK handover
+
+// Define input variables
+VAR_INPUT
+    bandwidth : REAL;
+    delay : REAL;
+    jitter : REAL;
+    ber : REAL;
+    throughput : REAL;
+    bursterror : REAL;
+    packetlossratio: REAL;
+END_VAR
+
+// Define output variable
+VAR_OUTPUT
+    APAV : REAL;
+END_VAR
+
+// Fuzzify input variable 'bandwidth'
+FUZZIFY bandwidth
+    TERM low := trape 0 0 800 1100;
+    TERM medium := trape 800 3200 8000 11000;
+    TERM high := trape 8000 12000 50000 50000;
+END_FUZZIFY
+
+FUZZIFY delay
+    TERM low := trape 0 0 20 25;
+    TERM medium := trape 20 25 30 35;
+    TERM high := trape 30 75 400 400;
+END_FUZZIFY
+
+FUZZIFY jitter
+    TERM low := trape 0 0 5 7;
+    TERM medium := trape 6 7 8 9;
+    TERM high := trape 8 9 20 20;
+END_FUZZIFY
+
+FUZZIFY ber
+    TERM low := trape 0 0 0.00001 0.0001;
+    TERM medium := trape 0.00005 0.0001 0.0005 0.0007;
+    TERM high := trape 0.0005 0.0008 0.001 0.001;
+END_FUZZIFY
+
+FUZZIFY throughput
+    TERM low := trape 0 0 2 3;
+    TERM medium := trape 2 7 22 27;
+    TERM high := trape 22 27 50 50;
+END_FUZZIFY
+
+FUZZIFY bursterror
+    TERM low := trape 0 0 0.1 0.2;
+    TERM medium := trape 0.1 0.2 0.4 0.5;
+    TERM high := trape 0.4 0.5 1 1;
+END_FUZZIFY
+
+FUZZIFY packetlossratio
+    TERM low := trape 0 0 0.02 0.03;
+    TERM medium := trape 0.02 0.03 0.04 0.05;
+    TERM high := trape 0.04 0.05 0.1 0.1;
+END_FUZZIFY
+
+// Defzzzify output variable 'APAV' (Access Point Acceptance Value)
+DEFUZZIFY APAV
+    TERM SR := trian 0 0.1 0.2;
+    TERM WR := trian 0.2 0.3 0.4;
+    TERM NU := trian 0.4 0.5 0.6;
+    TERM WA := trian 0.6 0.7 0.8;
+    TERM SA := trian 0.8 0.9 1;
+    // Use 'Center Of Gravity' defuzzification method
+    METHOD : COG;
+    // Default value is 0 (if no rule activates defuzzifier)
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK No1
+    // Use 'min' for 'and' (also implicit use 'max'
+    // for 'or' to fulfill DeMorgan's Law)
+    AND : MIN;
+    // Use 'min' activation method
+    ACT : MIN;
+    // Use 'max' accumulation method
+    ACCU : MAX;
+
+	//	for Streaming service
+	//	(bandwidth, delay, jitter, ber, throughput, bursterror, packetlossratio)
+	//	(0.2771, 0.1428, 0.2571, 0.0286, 0.2571, 0.0286, 0.0286)
+	//	bandwidth, jitter, throughput (IMPORTANT)
+	//	delay (CONSIDERABLE)
+    RULE 1 :	IF bandwidth IS low		AND	jitter IS low		AND	throughput IS low		AND	delay IS low		THEN APAV IS WR;
+    RULE 2 : 	IF bandwidth IS low		AND	jitter IS low		AND	throughput IS low		AND	delay IS medium		THEN APAV IS WR;
+    RULE 3 : 	IF bandwidth IS low		AND	jitter IS low		AND	throughput IS low		AND	delay IS high		THEN APAV IS SR;
+    RULE 4 : 	IF bandwidth IS low		AND	jitter IS low		AND	throughput IS medium	AND	delay IS low		THEN APAV IS NU;
+    RULE 5 : 	IF bandwidth IS low		AND	jitter IS low		AND	throughput IS medium	AND	delay IS medium		THEN APAV IS NU;
+    RULE 6 : 	IF bandwidth IS low		AND	jitter IS low		AND	throughput IS medium	AND	delay IS high		THEN APAV IS WR;
+    RULE 7 : 	IF bandwidth IS low		AND	jitter IS low		AND	throughput IS high		AND	delay IS low		THEN APAV IS WA;
+    RULE 8 : 	IF bandwidth IS low		AND	jitter IS low		AND	throughput IS high		AND	delay IS medium		THEN APAV IS WA;
+    RULE 9 : 	IF bandwidth IS low		AND	jitter IS low		AND	throughput IS high		AND	delay IS high		THEN APAV IS NU;
+    RULE 10 : 	IF bandwidth IS low		AND	jitter IS medium	AND	throughput IS low		AND	delay IS low		THEN APAV IS SR;
+    RULE 11 : 	IF bandwidth IS low		AND	jitter IS medium	AND	throughput IS low		AND	delay IS medium		THEN APAV IS SR;
+    RULE 12 : 	IF bandwidth IS low		AND	jitter IS medium	AND	throughput IS low		AND	delay IS high		THEN APAV IS SR;
+    RULE 13 : 	IF bandwidth IS low		AND	jitter IS medium	AND	throughput IS medium	AND	delay IS low		THEN APAV IS WR;
+    RULE 14 : 	IF bandwidth IS low		AND	jitter IS medium	AND	throughput IS medium	AND	delay IS medium		THEN APAV IS WR;
+    RULE 15 : 	IF bandwidth IS low		AND	jitter IS medium	AND	throughput IS medium	AND	delay IS high		THEN APAV IS SR;
+    RULE 16 : 	IF bandwidth IS low		AND	jitter IS medium	AND	throughput IS high		AND	delay IS low		THEN APAV IS NU;
+    RULE 17 : 	IF bandwidth IS low		AND	jitter IS medium	AND	throughput IS high		AND	delay IS medium		THEN APAV IS NU;
+    RULE 18 : 	IF bandwidth IS low		AND	jitter IS medium	AND	throughput IS high		AND	delay IS high		THEN APAV IS WR;
+    RULE 19 : 	IF bandwidth IS low		AND	jitter IS high		AND	throughput IS low		AND	delay IS low		THEN APAV IS SR;
+    RULE 20 : 	IF bandwidth IS low		AND	jitter IS high		AND	throughput IS low		AND	delay IS medium		THEN APAV IS SR;
+    RULE 21 : 	IF bandwidth IS low		AND	jitter IS high		AND	throughput IS low		AND	delay IS high		THEN APAV IS SR;
+    RULE 22 : 	IF bandwidth IS low		AND	jitter IS high		AND	throughput IS medium	AND	delay IS low		THEN APAV IS SR;
+    RULE 23 : 	IF bandwidth IS low		AND	jitter IS high		AND	throughput IS medium	AND	delay IS medium		THEN APAV IS SR;
+    RULE 24 : 	IF bandwidth IS low		AND	jitter IS high		AND	throughput IS medium	AND	delay IS high		THEN APAV IS SR;
+    RULE 25 : 	IF bandwidth IS low		AND	jitter IS high		AND	throughput IS high		AND	delay IS low		THEN APAV IS WR;
+    RULE 26 : 	IF bandwidth IS low		AND	jitter IS high		AND	throughput IS high		AND	delay IS medium		THEN APAV IS WR;
+    RULE 27 : 	IF bandwidth IS low		AND	jitter IS high		AND	throughput IS high		AND	delay IS high		THEN APAV IS SR;
+    RULE 28 :	IF bandwidth IS medium	AND	jitter IS low		AND	throughput IS low		AND	delay IS low		THEN APAV IS WR;
+    RULE 29 : 	IF bandwidth IS medium	AND	jitter IS low		AND	throughput IS low		AND	delay IS medium		THEN APAV IS WR;
+    RULE 30 : 	IF bandwidth IS medium	AND	jitter IS low		AND	throughput IS low		AND	delay IS high		THEN APAV IS SR;
+    RULE 31 : 	IF bandwidth IS medium	AND	jitter IS low		AND	throughput IS medium	AND	delay IS low		THEN APAV IS WA;
+    RULE 32 : 	IF bandwidth IS medium	AND	jitter IS low		AND	throughput IS medium	AND	delay IS medium		THEN APAV IS WA;
+    RULE 33 : 	IF bandwidth IS medium	AND	jitter IS low		AND	throughput IS medium	AND	delay IS high		THEN APAV IS NU;
+    RULE 34 : 	IF bandwidth IS medium	AND	jitter IS low		AND	throughput IS high		AND	delay IS low		THEN APAV IS SA;
+    RULE 35 : 	IF bandwidth IS medium	AND	jitter IS low		AND	throughput IS high		AND	delay IS medium		THEN APAV IS SA;
+    RULE 36 : 	IF bandwidth IS medium	AND	jitter IS low		AND	throughput IS high		AND	delay IS high		THEN APAV IS WA;
+    RULE 37 : 	IF bandwidth IS medium	AND	jitter IS medium	AND	throughput IS low		AND	delay IS low		THEN APAV IS WA;
+    RULE 38 : 	IF bandwidth IS medium	AND	jitter IS medium	AND	throughput IS low		AND	delay IS medium		THEN APAV IS SR;
+    RULE 39 : 	IF bandwidth IS medium	AND	jitter IS medium	AND	throughput IS low		AND	delay IS high		THEN APAV IS WA;
+    RULE 40 : 	IF bandwidth IS medium	AND	jitter IS medium	AND	throughput IS medium	AND	delay IS low		THEN APAV IS NU;
+    RULE 41 : 	IF bandwidth IS medium	AND	jitter IS medium	AND	throughput IS medium	AND	delay IS medium		THEN APAV IS NU;
+    RULE 42 : 	IF bandwidth IS medium	AND	jitter IS medium	AND	throughput IS medium	AND	delay IS high		THEN APAV IS WR;
+    RULE 43 : 	IF bandwidth IS medium	AND	jitter IS medium	AND	throughput IS high		AND	delay IS low		THEN APAV IS WA;
+    RULE 44 : 	IF bandwidth IS medium	AND	jitter IS medium	AND	throughput IS high		AND	delay IS medium		THEN APAV IS WA;
+    RULE 45 : 	IF bandwidth IS medium	AND	jitter IS medium	AND	throughput IS high		AND	delay IS high		THEN APAV IS NU;
+    RULE 46 : 	IF bandwidth IS medium	AND	jitter IS high		AND	throughput IS low		AND	delay IS low		THEN APAV IS SR;
+    RULE 47 : 	IF bandwidth IS medium	AND	jitter IS high		AND	throughput IS low		AND	delay IS medium		THEN APAV IS SR;
+    RULE 48 : 	IF bandwidth IS medium	AND	jitter IS high		AND	throughput IS low		AND	delay IS high		THEN APAV IS SR;
+    RULE 49 : 	IF bandwidth IS medium	AND	jitter IS high		AND	throughput IS medium	AND	delay IS low		THEN APAV IS WR;
+    RULE 50 : 	IF bandwidth IS medium	AND	jitter IS high		AND	throughput IS medium	AND	delay IS medium		THEN APAV IS WR;
+    RULE 51 : 	IF bandwidth IS medium	AND	jitter IS high		AND	throughput IS medium	AND	delay IS high		THEN APAV IS SR;
+    RULE 52 : 	IF bandwidth IS medium	AND	jitter IS high		AND	throughput IS high		AND	delay IS low		THEN APAV IS NU;
+    RULE 53 : 	IF bandwidth IS medium	AND	jitter IS high		AND	throughput IS high		AND	delay IS medium		THEN APAV IS NU;
+    RULE 54 : 	IF bandwidth IS medium	AND	jitter IS high		AND	throughput IS high		AND	delay IS high		THEN APAV IS WR;
+    RULE 55 :	IF bandwidth IS high	AND	jitter IS low		AND	throughput IS low		AND	delay IS low		THEN APAV IS WA;
+    RULE 56 : 	IF bandwidth IS high	AND	jitter IS low		AND	throughput IS low		AND	delay IS medium		THEN APAV IS WA;
+    RULE 57 : 	IF bandwidth IS high	AND	jitter IS low		AND	throughput IS low		AND	delay IS high		THEN APAV IS NU;
+    RULE 58: 	IF bandwidth IS high	AND	jitter IS low		AND	throughput IS medium	AND	delay IS low		THEN APAV IS SA;
+    RULE 59 : 	IF bandwidth IS high	AND	jitter IS low		AND	throughput IS medium	AND	delay IS medium		THEN APAV IS SA;
+    RULE 60 : 	IF bandwidth IS high	AND	jitter IS low		AND	throughput IS medium	AND	delay IS high		THEN APAV IS WA;
+    RULE 61 : 	IF bandwidth IS high	AND	jitter IS low		AND	throughput IS high		AND	delay IS low		THEN APAV IS SA;
+    RULE 62 : 	IF bandwidth IS high	AND	jitter IS low		AND	throughput IS high		AND	delay IS medium		THEN APAV IS SA;
+    RULE 63 : 	IF bandwidth IS high	AND	jitter IS low		AND	throughput IS high		AND	delay IS high		THEN APAV IS WA;
+    RULE 64 : 	IF bandwidth IS high	AND	jitter IS medium	AND	throughput IS low		AND	delay IS low		THEN APAV IS NU;
+    RULE 65 : 	IF bandwidth IS high	AND	jitter IS medium	AND	throughput IS low		AND	delay IS medium		THEN APAV IS NU;
+    RULE 66 : 	IF bandwidth IS high	AND	jitter IS medium	AND	throughput IS low		AND	delay IS high		THEN APAV IS WR;
+    RULE 67 : 	IF bandwidth IS high	AND	jitter IS medium	AND	throughput IS medium	AND	delay IS low		THEN APAV IS WA;
+    RULE 68 : 	IF bandwidth IS high	AND	jitter IS medium	AND	throughput IS medium	AND	delay IS medium		THEN APAV IS WA;
+    RULE 69 : 	IF bandwidth IS high	AND	jitter IS medium	AND	throughput IS medium	AND	delay IS high		THEN APAV IS NU;
+    RULE 70 : 	IF bandwidth IS high	AND	jitter IS medium	AND	throughput IS high		AND	delay IS low		THEN APAV IS SA;
+    RULE 71 : 	IF bandwidth IS high	AND	jitter IS medium	AND	throughput IS high		AND	delay IS medium		THEN APAV IS SA;
+    RULE 72 : 	IF bandwidth IS high	AND	jitter IS medium	AND	throughput IS high		AND	delay IS high		THEN APAV IS WA;
+    RULE 73 : 	IF bandwidth IS high	AND	jitter IS high		AND	throughput IS low		AND	delay IS low		THEN APAV IS WR;
+    RULE 74 : 	IF bandwidth IS high	AND	jitter IS high		AND	throughput IS low		AND	delay IS medium		THEN APAV IS WR;
+    RULE 75 : 	IF bandwidth IS high	AND	jitter IS high		AND	throughput IS low		AND	delay IS high		THEN APAV IS SR;
+    RULE 76 : 	IF bandwidth IS high	AND	jitter IS high		AND	throughput IS medium	AND	delay IS low		THEN APAV IS NU;
+    RULE 77 : 	IF bandwidth IS high	AND	jitter IS high		AND	throughput IS medium	AND	delay IS medium		THEN APAV IS NU;
+    RULE 78 : 	IF bandwidth IS high	AND	jitter IS high		AND	throughput IS medium	AND	delay IS high		THEN APAV IS WR;
+    RULE 79 : 	IF bandwidth IS high	AND	jitter IS high		AND	throughput IS high		AND	delay IS low		THEN APAV IS WA;
+    RULE 80 : 	IF bandwidth IS high	AND	jitter IS high		AND	throughput IS high		AND	delay IS medium		THEN APAV IS WA;
+    RULE 81 : 	IF bandwidth IS high	AND	jitter IS high		AND	throughput IS high		AND	delay IS high		THEN APAV IS NU;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

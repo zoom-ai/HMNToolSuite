@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<emulator>
+<network>
+<name>CDMA</name>
+<device>BaseStation</device>
+<coverage>1000</coverage>
+<bandwidth>1000</bandwidth>
+<delay>19</delay>
+<jitter>6</jitter>
+<bitErrorRate>0.0010</bitErrorRate>
+<throughput>0.0</throughput>
+<burstErr>0.5</burstErr>
+<packetLossRatio>0.07</packetLossRatio>
+<costRate>0.9</costRate>
+<txPower>1.4</txPower>
+<rxPower>0.925</rxPower>
+<idlePower>0.045</idlePower>
+<minVelocity>0</minVelocity>
+<maxVelocity>300</maxVelocity>
+<color>ff0000</color>
+</network>
+</emulator>

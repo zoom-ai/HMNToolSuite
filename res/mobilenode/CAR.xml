@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<emulator>
+<mobilenode>
+	<name>CAR</name>
+	<icon>car.png</icon>
+	<color>FFC800</color>
+	<maxVelocity>40</maxVelocity>
+	<minVelocity>0</minVelocity>
+</mobilenode>
+</emulator>

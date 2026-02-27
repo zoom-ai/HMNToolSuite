@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<emulator>
+<mobilenode>
+<name>TRUCK</name>
+<icon>truck.png</icon>
+<minVelocity>0</minVelocity>
+<maxVelocity>50</maxVelocity>
+<color>99</color>
+</mobilenode>
+</emulator>

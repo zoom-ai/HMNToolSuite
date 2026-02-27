@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><rulebase><rule><name>t1</name><event>VoiceCall</event><condition></condition><action>QUALITY#BASIC#3</action></rule></rulebase>

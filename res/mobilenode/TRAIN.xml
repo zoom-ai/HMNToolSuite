@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<emulator>
+<mobilenode>
+	<name>TRAIN</name>
+	<icon>train.png</icon>
+	<color>8E34A4</color>
+	<maxVelocity>100</maxVelocity>
+	<minVelocity>0</minVelocity>
+</mobilenode>
+</emulator>

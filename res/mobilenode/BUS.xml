@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<emulator>
+<mobilenode>
+	<name>BUS</name>
+	<icon>bus.png</icon>
+	<color>FF00FF</color>
+	<maxVelocity>60</maxVelocity>
+	<minVelocity>0</minVelocity>
+</mobilenode>
+</emulator>

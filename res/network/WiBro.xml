@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<emulator>
+<network>
+<name>WiBro</name>
+<device>RadioAccessStation</device>
+<coverage>800</coverage>
+<bandwidth>2000</bandwidth>
+<delay>45</delay>
+<jitter>10</jitter>
+<bitErrorRate>1.0E-5</bitErrorRate>
+<throughput>40.0</throughput>
+<burstErr>0.2</burstErr>
+<packetLossRatio>0.04</packetLossRatio>
+<costRate>0.5</costRate>
+<txPower>2.8</txPower>
+<rxPower>0.495</rxPower>
+<idlePower>0.082</idlePower>
+<minVelocity>0</minVelocity>
+<maxVelocity>80</maxVelocity>
+<color>ff</color>
+</network>
+</emulator>

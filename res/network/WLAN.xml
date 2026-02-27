@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<emulator>
+<network>
+<name>WLAN</name>
+<device>AccessPoint</device>
+<coverage>400</coverage>
+<bandwidth>11000</bandwidth>
+<delay>30</delay>
+<jitter>8</jitter>
+<bitErrorRate>1.0E-4</bitErrorRate>
+<throughput>0.0</throughput>
+<burstErr>0.1</burstErr>
+<packetLossRatio>0.02</packetLossRatio>
+<costRate>0.2</costRate>
+<txPower>2.0</txPower>
+<rxPower>0.7</rxPower>
+<idlePower>0.06</idlePower>
+<minVelocity>0</minVelocity>
+<maxVelocity>12</maxVelocity>
+<color>0</color>
+</network>
+</emulator>

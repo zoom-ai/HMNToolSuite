@@ -1,0 +1,119 @@
+// Block definition (there may be more than one block per file)
+// This is for calculating APAV for Quality of Voice Call
+FUNCTION_BLOCK handover
+
+// Define input variables
+VAR_INPUT
+    bandwidth : REAL;
+    delay : REAL;
+    jitter : REAL;
+    ber : REAL;
+    throughput : REAL;
+    bursterror : REAL;
+    packetlossratio: REAL;
+END_VAR
+
+// Define output variable
+VAR_OUTPUT
+    APAV : REAL;
+END_VAR
+
+// Fuzzify input variable 'RSS'
+FUZZIFY bandwidth
+    TERM low := trape 0 0 800 1100;
+    TERM medium := trape 800 3200 8000 11000;
+    TERM high := trape 8000 12000 50000 50000;
+END_FUZZIFY
+
+FUZZIFY delay
+    TERM low := trape 0 0 20 25;
+    TERM medium := trape 20 25 30 35;
+    TERM high := trape 30 75 400 400;
+END_FUZZIFY
+
+FUZZIFY jitter
+    TERM low := trape 0 0 5 7;
+    TERM medium := trape 6 7 8 9;
+    TERM high := trape 8 9 20 20;
+END_FUZZIFY
+
+FUZZIFY ber
+    TERM low := trape 0 0 0.00001 0.0001;
+    TERM medium := trape 0.00005 0.0001 0.0005 0.0007;
+    TERM high := trape 0.0005 0.0008 0.001 0.001;
+END_FUZZIFY
+
+FUZZIFY throughput
+    TERM low := trape 0 0 2 3;
+    TERM medium := trape 2 7 22 27;
+    TERM high := trape 22 27 50 50;
+END_FUZZIFY
+
+FUZZIFY bursterror
+    TERM low := trape 0 0 0.1 0.2;
+    TERM medium := trape 0.1 0.2 0.4 0.5;
+    TERM high := trape 0.4 0.5 1 1;
+END_FUZZIFY
+
+FUZZIFY packetlossratio
+    TERM low := trape 0 0 0.02 0.03;
+    TERM medium := trape 0.02 0.03 0.04 0.05;
+    TERM high := trape 0.04 0.05 0.1 0.1;
+END_FUZZIFY
+
+// Defzzzify output variable 'APAV' (Access Point Acceptance Value)
+DEFUZZIFY APAV
+    TERM SR := trian 0 0.1 0.2;
+    TERM WR := trian 0.2 0.3 0.4;
+    TERM NU := trian 0.4 0.5 0.6;
+    TERM WA := trian 0.6 0.7 0.8;
+    TERM SA := trian 0.8 0.9 1;
+    // Use 'Center Of Gravity' defuzzification method
+    METHOD : COG;
+    // Default value is 0 (if no rule activates defuzzifier)
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK No1
+    // Use 'min' for 'and' (also implicit use 'max'
+    // for 'or' to fulfill DeMorgan's Law)
+    AND : MIN;
+    // Use 'min' activation method
+    ACT : MIN;
+    // Use 'max' accumulation method
+    ACCU : MAX;
+
+	//	for FTP service
+	//	(bandwidth, delay, jitter, ber, throughput, bursterror, packetlossratio)
+	//	(0.0522, 0.0307, 0.0307, 0.2761, 0.0522, 0.2761, 0.2761)
+	//	ber, bursterror, packetlossratio (IMPORTANT)
+    RULE 1 :	IF ber IS low		AND	bursterror IS low		AND	packetlossratio IS low		THEN APAV IS SA;
+    RULE 2 : 	IF ber IS low		AND	bursterror IS low		AND	packetlossratio IS medium	THEN APAV IS SA;
+    RULE 3 : 	IF ber IS low		AND	bursterror IS low		AND	packetlossratio IS high		THEN APAV IS WA;
+    RULE 4 : 	IF ber IS low		AND	bursterror IS medium	AND	packetlossratio IS low		THEN APAV IS SA;
+    RULE 5 : 	IF ber IS low		AND	bursterror IS medium	AND	packetlossratio IS medium	THEN APAV IS WA;
+    RULE 6 : 	IF ber IS low		AND	bursterror IS medium	AND	packetlossratio IS high		THEN APAV IS NU;
+    RULE 7 : 	IF ber IS low		AND	bursterror IS high		AND	packetlossratio IS low		THEN APAV IS WA;
+    RULE 8 : 	IF ber IS low		AND	bursterror IS high		AND	packetlossratio IS medium	THEN APAV IS NU;
+    RULE 9 : 	IF ber IS low		AND	bursterror IS high		AND	packetlossratio IS high		THEN APAV IS WR;
+    RULE 10 : 	IF ber IS medium	AND	bursterror IS low		AND	packetlossratio IS low		THEN APAV IS SA;
+    RULE 11 : 	IF ber IS medium	AND	bursterror IS low		AND	packetlossratio IS medium	THEN APAV IS WA;
+    RULE 12 : 	IF ber IS medium	AND	bursterror IS low		AND	packetlossratio IS high		THEN APAV IS NU;
+    RULE 13 : 	IF ber IS medium	AND	bursterror IS medium	AND	packetlossratio IS low		THEN APAV IS WA;
+    RULE 14 : 	IF ber IS medium	AND	bursterror IS medium	AND	packetlossratio IS medium	THEN APAV IS NU;
+    RULE 15 : 	IF ber IS medium	AND	bursterror IS medium	AND	packetlossratio IS high		THEN APAV IS WR;
+    RULE 16 : 	IF ber IS medium	AND	bursterror IS high		AND	packetlossratio IS low		THEN APAV IS NU;
+    RULE 17 : 	IF ber IS medium	AND	bursterror IS high		AND	packetlossratio IS medium	THEN APAV IS WR;
+    RULE 18 : 	IF ber IS medium	AND	bursterror IS high		AND	packetlossratio IS high		THEN APAV IS SR;
+    RULE 19 : 	IF ber IS high		AND	bursterror IS low		AND	packetlossratio IS low		THEN APAV IS WA;
+    RULE 20 : 	IF ber IS high		AND	bursterror IS low		AND	packetlossratio IS medium	THEN APAV IS NU;
+    RULE 21 : 	IF ber IS high		AND	bursterror IS low		AND	packetlossratio IS high		THEN APAV IS WR;
+    RULE 22 : 	IF ber IS high		AND	bursterror IS medium	AND	packetlossratio IS low		THEN APAV IS NU;
+    RULE 23 : 	IF ber IS high		AND	bursterror IS medium	AND	packetlossratio IS medium	THEN APAV IS WR;
+    RULE 24 : 	IF ber IS high		AND	bursterror IS medium	AND	packetlossratio IS high		THEN APAV IS SR;
+    RULE 25 : 	IF ber IS high		AND	bursterror IS high		AND	packetlossratio IS low		THEN APAV IS WR;
+    RULE 26 : 	IF ber IS high		AND	bursterror IS high		AND	packetlossratio IS medium	THEN APAV IS SR;
+    RULE 27 : 	IF ber IS high		AND	bursterror IS high		AND	packetlossratio IS high		THEN APAV IS SR;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
